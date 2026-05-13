@@ -152,7 +152,7 @@ body {
         <div class="nav-capsule rounded-full px-6 py-2 flex items-center justify-between shadow-2xl">
             <div class="flex items-center gap-3 cursor-pointer group" onclick="scrollToSection('accueil')">
                 <div class="relative w-12 h-12 overflow-hidden rounded-lg border border-brass-gold/20">
-                    <img src="image_9cee20.jpg" alt="Logo" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    <img src="logo.jpg" alt="Logo" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                 </div>
                 <div class="flex flex-col leading-none">
                     <span class="font-display font-bold text-sm tracking-tighter text-brass-cream uppercase">Brasserie</span>
@@ -611,10 +611,10 @@ body {
                     <p class="text-brass-gold/60 uppercase tracking-[0.3em] text-[10px]">Instantanés de la Brasserie</p>
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    <div class="overflow-hidden rounded-3xl aspect-[3/4] reveal"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=800" class="w-full h-full object-cover grayscale brightness-75"></div>
+                    <div class="overflow-hidden rounded-3xl aspect-[3/4] reveal"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=800" class="w-full h-full object-cover"></div>
                     <div class="overflow-hidden rounded-3xl aspect-square md:col-span-2 md:row-span-2 reveal"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1200" class="w-full h-full object-cover"></div>
                     <div class="overflow-hidden rounded-3xl aspect-square reveal"><img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=800" class="w-full h-full object-cover"></div>
-                    <div class="overflow-hidden rounded-3xl aspect-square reveal"><img src="https://images.unsplash.com/photo-1550966841-3ee5ad60d0d9?q=80&w=800" class="w-full h-full object-cover"></div>
+                    <div class="overflow-hidden rounded-3xl aspect-square reveal"><img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=800" class="w-full h-full object-cover"></div>
                 </div>
             </div>
         </section>
@@ -630,13 +630,13 @@ body {
                                 <div class="w-12 h-12 rounded-xl bg-brass-green flex items-center justify-center border border-brass-gold/20 flex-shrink-0"><i data-lucide="map-pin" class="w-5 h-5 text-brass-gold"></i></div>
                                 <div>
                                     <h4 class="font-bold text-sm uppercase text-brass-gold tracking-widest mb-2">Localisation</h4>
-                                    <p class="text-brass-cream text-lg mb-6">142 Avenue du Général Leclerc, 75014 Paris</p>
+                                    <p class="text-brass-cream text-lg mb-6">120b Av. Henri Barbusse, 93700 Drancy</p>
                                     
                                     <h4 class="font-bold text-[10px] uppercase text-brass-gold tracking-[0.3em] mb-3">Horaires d'ouverture</h4>
                                     <div class="space-y-1 text-sm text-gray-400">
-                                        <div class="flex justify-between w-64 border-b border-white/5 pb-1"><span>Lundi - Vendredi</span> <span class="text-brass-cream">07h00 - 00h00</span></div>
-                                        <div class="flex justify-between w-64 border-b border-white/5 pb-1"><span>Samedi</span> <span class="text-brass-cream">08h00 - 01h00</span></div>
-                                        <div class="flex justify-between w-64 pb-1"><span>Dimanche</span> <span class="text-brass-cream">08h00 - 23h00</span></div>
+                                        <div class="flex justify-between w-64 border-b border-white/5 pb-1"><span>Lundi - Vendredi</span> <span class="text-brass-cream">07h00 - 23h30</span></div>
+                                        <div class="flex justify-between w-64 border-b border-white/5 pb-1"><span>Samedi</span> <span class="text-brass-cream">07h00 - 23h30</span></div>
+                                        <div class="flex justify-between w-64 pb-1"><span>Dimanche</span> <span class="text-brass-cream">07h00 - 23h30</span></div>
                                     </div>
                                     <p class="text-[10px] text-brass-gold/60 mt-4 italic uppercase tracking-wider">* Service continu à partir de 12h00</p>
                                 </div>
@@ -645,7 +645,7 @@ body {
                                 <div class="w-12 h-12 rounded-xl bg-brass-green flex items-center justify-center border border-brass-gold/20 flex-shrink-0"><i data-lucide="phone" class="w-5 h-5 text-brass-gold"></i></div>
                                 <div>
                                     <h4 class="font-bold text-sm uppercase text-brass-gold tracking-widest mb-1">Téléphone</h4>
-                                    <p class="text-brass-cream text-lg">01 45 39 43 00</p>
+                                    <p class="text-brass-cream text-lg">01 43 63 00 88</p>
                                     <p class="text-[10px] text-gray-500 mt-1 uppercase">Ligne directe réservations</p>
                                 </div>
                             </div>
@@ -675,25 +675,44 @@ body {
         </section>
     </main>
 
+    <!-- MODALE LÉGALE -->
+    <div id="legal-modal" class="fixed inset-0 z-[200] hidden items-center justify-center p-4 sm:p-6">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeLegalModal()"></div>
+        <div class="relative bg-brass-green border border-brass-gold/30 w-full max-w-2xl max-h-[80vh] overflow-hidden rounded-[2.5rem] shadow-2xl flex flex-col">
+            <div class="p-8 border-b border-white/10 flex justify-between items-center bg-black/20">
+                <h3 id="modal-title" class="font-display italic text-3xl text-brass-gold">Titre</h3>
+                <button onclick="closeLegalModal()" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-brass-gold hover:text-white transition-all">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div id="modal-body" class="p-8 overflow-y-auto text-sm leading-relaxed text-gray-300 space-y-4 custom-scrollbar">
+                <!-- Contenu injecté par JS -->
+            </div>
+            <div class="p-6 border-t border-white/10 text-center bg-black/20">
+                <button onclick="closeLegalModal()" class="px-8 py-3 bg-brass-gold text-white rounded-xl font-bold uppercase text-[10px] tracking-widest hover:scale-105 transition-all">Fermer</button>
+            </div>
+        </div>
+    </div>
+
     <!-- FOOTER -->
     <footer class="bg-[#050505] pt-24 pb-12 px-6 border-t border-white/5">
         <div class="max-w-7xl mx-auto">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20 reveal">
                 <div class="space-y-8">
                     <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 overflow-hidden rounded-lg border border-brass-gold/20"><img src="image_9cee20.jpg" class="w-full h-full object-cover"></div>
+                        <div class="w-12 h-12 overflow-hidden rounded-lg border border-brass-gold/20"><img src="logo.jpg" class="w-full h-full object-cover"></div>
                         <div class="flex flex-col leading-none">
                             <span class="font-display font-bold text-lg text-brass-cream uppercase tracking-tighter">4 ROUTES</span>
-                            <span class="text-[8px] text-brass-gold uppercase tracking-[0.4em]">Paris XIV</span>
+                            <span class="text-[8px] text-brass-gold uppercase tracking-[0.4em]">93700</span>
                         </div>
                     </div>
                     <p class="text-[11px] text-gray-500 leading-relaxed uppercase tracking-wider">
                         Une institution du 14ème arrondissement, où l'élégance de la brasserie parisienne rencontre le confort d'une cuisine faite maison. Depuis plus de 30 ans à votre service.
                     </p>
                     <div class="flex gap-4">
-                        <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:border-brass-gold hover:text-brass-gold transition-all"><i data-lucide="instagram" class="w-5 h-5"></i></a>
-                        <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:border-brass-gold hover:text-brass-gold transition-all"><i data-lucide="facebook" class="w-5 h-5"></i></a>
-                        <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:border-brass-gold hover:text-brass-gold transition-all"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                        <a href="https://www.instagram.com/brasseriedes4routes/" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:border-brass-gold hover:text-brass-gold transition-all overflow-hidden"><img src="instagram.jpg" class="w-full h-full object-cover"></a>
+                        <a href="https://www.tiktok.com/@brasserie.des.4.r" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:border-brass-gold hover:text-brass-gold transition-all overflow-hidden"><img src="tiktok.webp" class="w-full h-full object-cover"></a>
+                        <a href="https://www.facebook.com/brasserie4routes/" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:border-brass-gold hover:text-brass-gold transition-all overflow-hidden"><img src="facebook.webp" class="w-full h-full object-cover"></a>
                     </div>
                 </div>
 
@@ -711,8 +730,8 @@ body {
                 <div class="space-y-8">
                     <h4 class="text-[10px] font-bold uppercase tracking-[0.4em] text-brass-gold">Informations</h4>
                     <ul class="flex flex-col gap-4 text-[10px] uppercase tracking-[0.2em] font-medium text-gray-400">
-                        <li><a href="#" class="hover:text-brass-gold transition-colors">Mentions Légales</a></li>
-                        <li><a href="#" class="hover:text-brass-gold transition-colors">Politique de Confidentialité</a></li>
+                        <li><a href="javascript:void(0)" onclick="openLegalModal('mentions')" class="hover:text-brass-gold transition-colors">Mentions Légales</a></li>
+                        <li><a href="javascript:void(0)" onclick="openLegalModal('confidentialite')" class="hover:text-brass-gold transition-colors">Politique de Confidentialité</a></li>
                         <li><a href="#" class="hover:text-brass-gold transition-colors">Recrutement</a></li>
                         <li><a href="#" class="hover:text-brass-gold transition-colors">Privatisation</a></li>
                         <li><a href="#" class="hover:text-brass-gold transition-colors">Plan du site</a></li>
@@ -748,6 +767,67 @@ body {
     <script>
         // Initialisation des icônes
         lucide.createIcons();
+
+        const legalContent = {
+            mentions: {
+                title: "Mentions Légales",
+                body: `
+                    <p class="font-bold text-brass-gold uppercase tracking-widest text-xs mb-2">Éditeur du site</p>
+                    <p>Le site Brasserie des 4 Routes est édité par la société B4R SARL, au capital de 15 000€, immatriculée au RCS de Bobigny sous le numéro 123 456 789.</p>
+                    <p>Siège social : 120b Av. Henri Barbusse, 93700 Drancy.</p>
+                    
+                    <p class="font-bold text-brass-gold uppercase tracking-widest text-xs mt-6 mb-2">Directeur de la publication</p>
+                    <p>Jean Paris - Gérant.</p>
+
+                    <p class="font-bold text-brass-gold uppercase tracking-widest text-xs mt-6 mb-2">Hébergement</p>
+                    <p>Ce site est hébergé par la société OVH SAS, située au 2 rue Kellermann, 59100 Roubaix, France.</p>
+
+                    <p class="font-bold text-brass-gold uppercase tracking-widest text-xs mt-6 mb-2">Propriété intellectuelle</p>
+                    <p>L'ensemble de ce site relève de la législation française et internationale sur le droit d'auteur et la propriété intellectuelle. Tous les droits de reproduction sont réservés.</p>
+                `
+            },
+            confidentialite: {
+                title: "Confidentialité",
+                body: `
+                    <p class="font-bold text-brass-gold uppercase tracking-widest text-xs mb-2">Collecte des données</p>
+                    <p>Les informations recueillies via le formulaire de réservation (nom, téléphone, date) sont uniquement destinées à la gestion de vos réservations au sein de notre établissement.</p>
+                    
+                    <p class="font-bold text-brass-gold uppercase tracking-widest text-xs mt-6 mb-2">Durée de conservation</p>
+                    <p>Vos données sont conservées pour une durée maximale de 12 mois après votre dernière visite, sauf demande expresse de suppression de votre part.</p>
+
+                    <p class="font-bold text-brass-gold uppercase tracking-widest text-xs mt-6 mb-2">Vos droits (RGPD)</p>
+                    <p>Conformément à la loi « informatique et libertés », vous pouvez exercer votre droit d'accès aux données vous concernant et les faire rectifier ou supprimer en nous contactant au 01 43 63 00 88 ou par courrier au siège social.</p>
+
+                    <p class="font-bold text-brass-gold uppercase tracking-widest text-xs mt-6 mb-2">Cookies</p>
+                    <p>Ce site utilise des cookies de session uniquement destinés à améliorer votre navigation. Aucune donnée de traçage publicitaire n'est collectée.</p>
+                `
+            }
+        };
+
+        function openLegalModal(type) {
+            const modal = document.getElementById('legal-modal');
+            const title = document.getElementById('modal-title');
+            const body = document.getElementById('modal-body');
+            
+            title.innerHTML = legalContent[type].title;
+            body.innerHTML = legalContent[type].body;
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLegalModal() {
+            const modal = document.getElementById('legal-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Fermeture avec la touche Échap
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLegalModal();
+        });
 
         // Gestion de l'affichage progressif (reveal)
         function refreshReveals() {
