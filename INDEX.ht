@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="fr" class="text-[#d6d2c4] scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4 ROUTES | BRASSERIE PARIS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brass-green': '#1a2e26',
+                        'brass-cream': '#d6d2c4',
+                        'brass-gold': '#a68b5b',
+                        'dark-base': '#0a0a0a',
+                    },
+                    borderRadius: {
+                        '4xl': '2rem',
+                        '5xl': '3rem',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            background-image: linear-gradient(rgba(10, 10, 10, 0.85), rgba(10, 10, 10, 0.85)), url('fond.jpg');
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+        }
+        .font-display { font-family: 'Playfair Display', serif; }
+
+        #page-loader {
+            position: fixed; inset: 0; background: #1a2e26; z-index: 999;
+            transform: translateY(100%); transition: transform 0.6s cubic-bezier(0.85, 0, 0.15, 1);
+            pointer-events: none;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .nav-capsule {
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(214, 210, 196, 0.1);
+        }
+
+        .reveal { 
+            opacity: 0; 
+            transform: translateY(40px); 
+            transition: opacity 1s cubic-bezier(0.2, 1, 0.3, 1), transform 1s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+        
+        .reveal.active { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+
+        .hero-zoom { animation: slowZoom 30s infinite alternate ease-in-out; }
+        @keyframes slowZoom { from { transform: scale(1); } to { transform: scale(1.1); } }
+
+        /* Navigation Links Styles */
+        .nav-link { position: relative; transition: color 0.4s ease; color: #d6d2c4; }
+        .nav-link::after {
+            content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px;
+            background: #a68b5b; transition: width 0.4s ease;
+        }
+        .nav-link:hover { color: #a68b5b; }
+        .nav-link.active { color: #a68b5b !important; }
+        .nav-link.active::after { width: 100%; }
+
+        .menu-tab-btn { position: relative; transition: all 0.3s ease; opacity: 0.6; cursor: pointer; }
+        .menu-tab-btn:hover { opacity: 1; }
+        .menu-tab-btn.active { color: #a68b5b; opacity: 1; }
+        .menu-tab-btn.active::after {
+            content: ''; position: absolute; bottom: -8px; left: 0; width: 100%; height: 2px;
+            background: #a68b5b; animation: scaleIn 0.3s forwards;
+        }
+
+        .menu-content { display: none; opacity: 0; }
+        .menu-content.active { display: block; animation: tabFadeIn 0.5s forwards; }
+        @keyframes tabFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        #mobile-overlay {
+            clip-path: circle(0% at 100% 0%);
+            transition: clip-path 0.7s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        #mobile-overlay.open { clip-path: circle(150% at 100% 0%); }
+
+        .price-tag { font-weight: 700; color: #a68b5b; min-width: max-content; }
+        .item-row { border-bottom: 1px solid rgba(214, 210, 196, 0.05); padding-bottom: 1rem; }
+        .item-row:last-child { border-bottom: none; }
+        .sub-desc { font-size: 0.8rem; color: #9ca3af; margin-top: 0.25rem; line-height: 1.4; }
+    </style>
+</head>
+<body>
+
+    <div id="page-loader">
+        <div class="text-brass-gold font-display text-4xl animate-pulse italic">4R</div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-6xl">
+        <div class="nav-capsule rounded-full px-6 py-2 flex items-center justify-between shadow-2xl">
+            <div class="flex items-center gap-3 cursor-pointer group" onclick="scrollToSection('accueil')">
+                <div class="relative w-12 h-12 overflow-hidden rounded-lg border border-brass-gold/20">
+                    <img src="image_9cee20.jpg" alt="Logo" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                </div>
+                <div class="flex flex-col leading-none">
+                    <span class="font-display font-bold text-sm tracking-tighter text-brass-cream uppercase">Brasserie</span>
+                    <span class="text-[10px] font-light tracking-[0.3em] text-brass-gold uppercase">Des 4 Routes</span>
+                </div>
+            </div>
+            <div id="desktop-nav" class="hidden lg:flex items-center gap-8 text-[10px] font-bold uppercase tracking-[0.2em]">
+                <a href="#accueil" class="nav-link" data-section="accueil">Accueil</a>
+                <a href="#menu" class="nav-link" data-section="menu">Menu</a>
+                <a href="#galerie" class="nav-link" data-section="galerie">Galerie</a>
+                <a href="#contact" class="nav-link" data-section="contact">Contact</a>
+            </div>
+            <button onclick="scrollToSection('reservation')" class="hidden sm:block px-6 py-2.5 bg-brass-green text-brass-cream border border-brass-gold/30 text-[10px] font-bold rounded-full uppercase tracking-widest hover:bg-brass-gold hover:text-white transition-all active:scale-95">
+                Réserver
+            </button>
+            <button id="menu-toggle" class="lg:hidden w-10 h-10 flex flex-col justify-center items-center gap-1.5 focus:outline-none">
+                <div class="w-6 h-[2px] bg-brass-cream transition-all duration-300" id="bar1"></div>
+                <div class="w-6 h-[2px] bg-brass-cream transition-all duration-300" id="bar2"></div>
+            </button>
+        </div>
+    </nav>
+
+    <div id="mobile-overlay" class="fixed inset-0 bg-brass-green z-[90] flex flex-col items-center justify-center p-10 text-brass-cream">
+        <div class="flex flex-col gap-8 text-4xl font-display italic text-center">
+            <a href="javascript:void(0)" onclick="toggleMenu('accueil')" class="hover:text-brass-gold transition-colors">Accueil</a>
+            <a href="javascript:void(0)" onclick="toggleMenu('menu')" class="hover:text-brass-gold transition-colors">La Carte</a>
+            <a href="javascript:void(0)" onclick="toggleMenu('galerie')" class="hover:text-brass-gold transition-colors">Galerie</a>
+            <a href="javascript:void(0)" onclick="toggleMenu('contact')" class="hover:text-brass-gold transition-colors">Contact</a>
+            <a href="javascript:void(0)" onclick="toggleMenu('reservation')" class="hover:text-brass-gold transition-colors text-brass-gold">Réserver</a>
+        </div>
+    </div>
+
+    <main>
+        <!-- ACCUEIL -->
+        <section id="accueil" class="relative h-screen flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 z-10"></div>
+            <img src="fond.jpg" class="hero-zoom absolute inset-0 w-full h-full object-cover opacity-40">
+            <div class="relative z-20 text-center px-4 max-w-5xl reveal active">
+                <span class="inline-block px-4 py-1 border border-brass-gold/40 rounded-full text-[10px] uppercase tracking-[0.5em] text-brass-gold mb-8">
+                    L'Excellence Parisienne
+                </span>
+                <h1 class="text-[12vw] md:text-[7vw] font-display italic leading-[0.9] mb-10 text-brass-cream">
+                    Le Goût de <br><span class="text-brass-gold">l'Authentique.</span>
+                </h1>
+                <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                    <button onclick="scrollToSection('menu')" class="px-12 py-5 bg-brass-cream text-brass-green rounded-2xl font-bold uppercase text-xs tracking-widest hover:scale-105 transition-all">La Carte</button>
+                    <button onclick="scrollToSection('reservation')" class="px-12 py-5 border border-brass-cream/20 rounded-2xl font-bold uppercase text-xs tracking-widest hover:bg-brass-cream/5 transition-all backdrop-blur-md">Réservation</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION MENU -->
+        <section id="menu" class="py-32 px-6 max-w-7xl mx-auto min-h-screen relative z-10">
+            <div class="flex flex-col items-center mb-16 text-center reveal">
+                <h2 class="text-5xl font-display italic mb-4">Notre Carte</h2>
+                <div class="w-20 h-1 bg-brass-gold rounded-full mb-12"></div>
+                <div class="flex flex-wrap justify-center gap-6 md:gap-12 text-[10px] font-bold uppercase tracking-[0.3em] border-b border-white/5 pb-6 w-full">
+                    <button onclick="switchMenu('brunch')" class="menu-tab-btn active" id="btn-brunch">Brunch</button>
+                    <button onclick="switchMenu('carte')" class="menu-tab-btn" id="btn-carte">Menu</button>
+                    <button onclick="switchMenu('boissons')" class="menu-tab-btn" id="btn-boissons">Boissons</button>
+                    <button onclick="switchMenu('vins')" class="menu-tab-btn" id="btn-vins">Vins</button>
+                </div>
+            </div>
+
+            <!-- BRUNCH -->
+            <div id="content-brunch" class="menu-content active">
+                <div class="text-center mb-16 italic text-brass-gold tracking-widest text-sm uppercase">TOUS LES JOURS DE 7H À 11H</div>
+                <div class="grid md:grid-cols-2 gap-x-20 gap-y-16">
+                    <div>
+                        <h3 class="font-display italic text-3xl mb-10 border-b border-brass-gold/20 pb-4">Les Breakfast</h3>
+                        <div class="space-y-8">
+                            <div class="item-row">
+                                <div class="flex justify-between items-baseline"><h4 class="text-xl font-display">Formule Express</h4><span class="price-tag">7,50 EUR</span></div>
+                                <p class="sub-desc">Boisson chaude au choix (hors matcha et double café) + croissant ou pain au chocolat + jus d’orange pressé</p>
+                            </div>
+                            <div class="item-row">
+                                <div class="flex justify-between items-baseline"><h4 class="text-xl font-display">Formule Continental</h4><span class="price-tag">9,50 EUR</span></div>
+                                <p class="sub-desc">Boisson chaude au choix (hors matcha et double café) + croissant ou pain au chocolat + jus d’orange pressé + tartine de beurre et confiture</p>
+                            </div>
+                            <div class="item-row">
+                                <div class="flex justify-between items-baseline"><h4 class="text-xl font-display">Formule B4R</h4><span class="price-tag">16,00 EUR</span></div>
+                                <p class="sub-desc">Boisson chaude au choix (hors matcha et double café) + croissant ou pain au chocolat + jus d’orange pressé + omelette ou toast (Toast saumon +2 €)</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 pt-4 border-t border-white/5">
+                                <div class="flex justify-between text-sm"><span>Croissant</span> <span class="text-brass-gold">2,00 EUR</span></div>
+                                <div class="flex justify-between text-sm"><span>Pain au chocolat</span> <span class="text-brass-gold">2,00 EUR</span></div>
+                                <div class="flex justify-between text-sm"><span>Tartine beurre & confiture</span> <span class="text-brass-gold">3,00 EUR</span></div>
+                                <div class="flex justify-between text-sm"><span>Omelette nature</span> <span class="text-brass-gold">7,00 EUR</span></div>
+                                <div class="flex justify-between text-sm"><span>Omelette fromage</span> <span class="text-brass-gold">8,00 EUR</span></div>
+                                <div class="flex justify-between text-sm"><span>Omelette dinde fumée</span> <span class="text-brass-gold">9,00 EUR</span></div>
+                                <div class="flex justify-between text-sm"><span>Œuf au plat</span> <span class="text-brass-gold">8,00 EUR</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-display italic text-3xl mb-10 border-b border-brass-gold/20 pb-4">Toast & Bowls</h3>
+                        <div class="space-y-8">
+                            <div class="item-row">
+                                <div class="flex justify-between items-baseline"><h4 class="text-xl font-display">Avocado toast</h4><span class="price-tag">9,00 EUR</span></div>
+                                <p class="sub-desc">Stracciatella, mousse d’avocat, vinaigre balsamique, tomate cerise</p>
+                            </div>
+                            <div class="item-row">
+                                <div class="flex justify-between items-baseline"><h4 class="text-xl font-display">Benedicte toast</h4><span class="price-tag">10,00 EUR</span></div>
+                                <p class="sub-desc">Pastrami, oeuf mollet crème fraiche au zaatar, sauce hollandaise</p>
+                            </div>
+                            <div class="item-row">
+                                <div class="flex justify-between items-baseline"><h4 class="text-xl font-display">Salmon toast</h4><span class="price-tag">11,00 EUR</span></div>
+                                <p class="sub-desc">Mousse d’avocat, stracciatella, saumon, sauce yaourt, tomate cerise</p>
+                            </div>
+                            <div class="item-row">
+                                <div class="flex justify-between items-baseline"><h4 class="text-xl font-display">Le choco bowl</h4><span class="price-tag">9,00 EUR</span></div>
+                                <p class="sub-desc">Mélange de fromage blanc, cacao, banane, noisette, granola</p>
+                            </div>
+                            <div class="item-row">
+                                <div class="flex justify-between items-baseline"><h4 class="text-xl font-display">Le vanilla bowl</h4><span class="price-tag">9,00 EUR</span></div>
+                                <p class="sub-desc">Mélange de fromage blanc, vanille, banane, noisette, granola</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MENU CARTE -->
+            <div id="content-carte" class="menu-content">
+                <div class="grid lg:grid-cols-2 gap-x-20 gap-y-16">
+                    <!-- COLONNE GAUCHE -->
+                    <div class="space-y-16">
+                        <section>
+                            <div class="flex justify-between items-end mb-10 border-b border-brass-gold/20 pb-4">
+                                <h3 class="font-display italic text-3xl">Les tapas</h3>
+                                <span class="text-[10px] uppercase tracking-widest text-brass-gold">de 16h à 19h</span>
+                            </div>
+                            <div class="space-y-6">
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Rillettes de saumon</h4><span class="price-tag">8,00 EUR</span></div>
+                                    <p class="sub-desc">Crème de poivron rouge, olives noires, oignons croustillants</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Rillettes de poulet</h4><span class="price-tag">8,00 EUR</span></div>
+                                    <p class="sub-desc">Fromage frais, citron confit, olives vertes, oignons croustillants</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Frites à la truffe</h4><span class="price-tag">7,00 EUR</span></div>
+                                    <p class="sub-desc">Crème fromagère à la truffe, parmesan</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Planche de fromages</h4><span class="price-tag">14,00 EUR</span></div>
+                                    <p class="sub-desc">Sélection de fromages affinés, servie avec pain de campagne</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Planche de charcuterie de bœuf</h4><span class="price-tag">14,00 EUR</span></div>
+                                    <p class="sub-desc">Sélection fine de charcuteries artisanales</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Planche mixte</h4><span class="price-tag">16,00 EUR</span></div>
+                                    <p class="sub-desc">L’accord parfait entre fromages et charcuteries de bœuf</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <h3 class="font-display italic text-3xl mb-10 border-b border-brass-gold/20 pb-4">Les entrées</h3>
+                            <div class="space-y-6">
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">L’œuf mimosa révisité</h4><span class="price-tag">8,00 EUR</span></div>
+                                    <p class="sub-desc">Émietté de thon, coriandres, olives noires, citron confit et cumin</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Cappuccino de potimarron</h4><span class="price-tag">8,00 EUR</span></div>
+                                    <p class="sub-desc">Potimarron rôti, châtaigne, œuf mollet croustillant</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Tartare de crevette</h4><span class="price-tag">11,00 EUR</span></div>
+                                    <p class="sub-desc">Mangue-passion, coriandre fraîche et mousse d’avocat citronnée</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Cromesquis de chèvre</h4><span class="price-tag">9,00 EUR</span></div>
+                                    <p class="sub-desc">Mousse de poivron rouge, tomates cerises, mélange de salades exquises et miel</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Carpaccio de bœuf à l’italienne</h4><span class="price-tag">12,00 EUR</span></div>
+                                    <p class="sub-desc">Tomate confite, parmesan affiné, pesto maison et crème de tomate</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Les escargots du B4R</h4><div class="flex flex-col items-end"><span class="price-tag">12,00 EUR <span class="text-[10px] text-gray-600 font-normal ml-2">par 6</span></span><span class="price-tag">20,00 EUR <span class="text-[10px] text-gray-600 font-normal ml-2">par 12</span></span></div></div>
+                                    <p class="sub-desc">Beurre persillé à l’ail, crème douce d’oignons confits</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Ceviche de saumon signature</h4><span class="price-tag">12,00 EUR</span></div>
+                                    <p class="sub-desc">Leche de tigre (citron vert, patate douce fondante, lait de coco, gingembre, coriandre) et noix de cajou</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Burrata crémeuse au pesto de pistache</h4><span class="price-tag">12,00 EUR</span></div>
+                                    <p class="sub-desc">Mélange de tomates cerises, crème de balsamique et pesto à la pistache</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <h3 class="font-display italic text-3xl mb-10 border-b border-brass-gold/20 pb-4">Les salades</h3>
+                            <div class="space-y-6">
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">La Caesar du B4R</h4><span class="price-tag">15,00 EUR</span></div>
+                                    <p class="sub-desc">Poulet fondant, salade romaine, oeuf de caille, pickles d’oignons rouge, parmesan</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">La chèvre</h4><span class="price-tag">15,00 EUR</span></div>
+                                    <p class="sub-desc">Croustillant de chèvre, poire confite, mélange de salade exquise, mousse de poivron, noix, tomate</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">La saumon</h4><span class="price-tag">16,00 EUR</span></div>
+                                    <p class="sub-desc">Saumon, salade de quinoa, betterave rôtie, mousse d’avocat, tomate, mangue, vinaigrette passion-mangue, mélange de graine</p>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- COLONNE DROITE -->
+                    <div class="space-y-16">
+                        <section>
+                            <h3 class="font-display italic text-3xl mb-10 border-b border-brass-gold/20 pb-4">Les plats</h3>
+                            <div class="space-y-6">
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Entrecôte de race grillée environ 250g</h4><span class="price-tag">24,00 EUR</span></div>
+                                    <p class="sub-desc">Sauce au poivre, accompagné de frites maison</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Paleron de bœuf 6h</h4><span class="price-tag">18,00 EUR</span></div>
+                                    <p class="sub-desc">Jus corsé et olives noires, accompagné de purée maison</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Suprême de volaille jaune rôti</h4><span class="price-tag">16,00 EUR</span></div>
+                                    <p class="sub-desc">Champignons poêlés et sauce forestière, accompagné de riz pilaf</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Souris d’agneau fondante</h4><span class="price-tag">24,00 EUR</span></div>
+                                    <p class="sub-desc">Cuisson lente au pain d’épices, croûtons dorés, jus réduit, accompagné de pomme grenailles persillées</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Tartare de bœuf à l’italienne</h4><span class="price-tag">17,00 EUR</span></div>
+                                    <p class="sub-desc">Parmesan affiné, tomates séchées, pesto, olives noires, câpres, accompagné de frites maison</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Burger classique</h4><span class="price-tag">16,00 EUR</span></div>
+                                    <p class="sub-desc">Bœuf, sauce barbecue, cumin-coriandre, poivrons confits, oignons croustillants cheddar fondu et pain brioché servi avec frites maison</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Burger fermier</h4><span class="price-tag">15,00 EUR</span></div>
+                                    <p class="sub-desc">Poulet, sauce sweet chili, cumin, coriandre, crème de tomate confite, oignons croustillants, cheddar fondu et pain brioché, servi avec frites maison</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Paris vegan</h4><span class="price-tag">16,00 EUR</span></div>
+                                    <p class="sub-desc">Steak Beyond, sauce barbecue, cumin-coriandre, poivrons grillés, cheddar fondu et pain brioché servi avec frites maison</p>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4 pt-4 border-t border-white/5 text-[10px] uppercase tracking-widest text-brass-gold">
+                                    <span>Frites / Salades / Purée / Riz / Légumes / Grenailles</span>
+                                    <span class="text-right">Supplément garniture +4,50 EUR</span>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <h3 class="font-display italic text-3xl mb-10 border-b border-brass-gold/20 pb-4">Les pâtes du Chef</h3>
+                            <div class="space-y-6">
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Rigatoni à la truffe d’été</h4><span class="price-tag">16,00 EUR</span></div>
+                                    <p class="sub-desc">Crème de parmesan, éclats de truffe</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Ravioli aux cèpes</h4><span class="price-tag">15,00 EUR</span></div>
+                                    <p class="sub-desc">Crème de homard, tomates cerises, pesto</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Rigatoni pesto pistache</h4><span class="price-tag">15,00 EUR</span></div>
+                                    <p class="sub-desc">Pesto maison à la pistache, stracciatella (Supplément Burrata +5,00 EUR)</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <h3 class="font-display italic text-3xl mb-10 border-b border-brass-gold/20 pb-4">Les poissons</h3>
+                            <div class="space-y-6">
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Pavé de saumon en feuille de bananier</h4><span class="price-tag">18,00 EUR</span></div>
+                                    <p class="sub-desc">Légèrement rôti, parfumé au fenouil, au gingembre et à la citronnelle, accompagné de légumes</p>
+                                </div>
+                                <div class="item-row">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display">Fish & chips du B4R</h4><span class="price-tag">17,00 EUR</span></div>
+                                    <p class="sub-desc">Cabillaud croustillant au paprika fumé, sauce tartare et sauce verte froide, accompagné de frites maison</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <h3 class="font-display italic text-3xl mb-10 border-b border-brass-gold/20 pb-4">Les douceurs & Pitchoune</h3>
+                            <div class="space-y-6">
+                                <div class="bg-white/5 p-4 rounded-2xl mb-6">
+                                    <div class="flex justify-between items-baseline"><h4 class="font-display text-brass-gold text-xl">Menu Pitchoune</h4><span class="price-tag">10,00 EUR</span></div>
+                                    <p class="sub-desc">Steak haché ou aiguillettes de poulet + frites + sirop à l’eau + glace smarties ou compote</p>
+                                </div>
+                                <div class="grid grid-cols-1 gap-4">
+                                    <div class="flex justify-between text-sm"><span>Brioche perdue gourmande</span> <span class="text-brass-gold">9,00 EUR</span></div>
+                                    <div class="flex justify-between text-sm"><span>Le tiramisu classique</span> <span class="text-brass-gold">8,00 EUR</span></div>
+                                    <div class="flex justify-between text-sm"><span>Profiterole gourmande</span> <span class="text-brass-gold">7,00 EUR</span></div>
+                                    <div class="flex justify-between text-sm"><span>Crème brulée vanille & tonka</span> <span class="text-brass-gold">8,00 EUR</span></div>
+                                    <div class="flex justify-between text-sm"><span>Mi-cuit chocolat cœur coulant</span> <span class="text-brass-gold">10,00 EUR</span></div>
+                                    <div class="flex justify-between text-sm"><span>Riz au lait caramel</span> <span class="text-brass-gold">7,00 EUR</span></div>
+                                    <div class="flex justify-between text-sm"><span>Café ou thé gourmand</span> <span class="text-brass-gold">10,00 EUR</span></div>
+                                    <div class="flex justify-between text-sm"><span>Glaces (1/2/3 boules)</span> <span class="text-brass-gold">6,00 / 8,00 / 10,00 EUR</span></div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOISSONS -->
+            <div id="content-boissons" class="menu-content">
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-16">
+                    <div class="space-y-12">
+                        <section>
+                            <div class="flex justify-between items-end mb-8 border-b border-brass-gold/20 pb-4">
+                                <h4 class="font-display text-2xl italic">Happy hours</h4>
+                                <span class="text-[10px] text-brass-gold uppercase tracking-widest">16H - 19H</span>
+                            </div>
+                            <div class="space-y-4 text-sm">
+                                <div class="flex justify-between"><span>Cocktails et mocktails</span> <span class="text-brass-gold">7,50 EUR</span></div>
+                                <div class="flex justify-between"><span>Stella Artois (50 cl)</span> <span class="text-brass-gold">6,00 EUR</span></div>
+                                <div class="flex justify-between"><span>Leffe (50 cl)</span> <span class="text-brass-gold">7,00 EUR</span></div>
+                                <div class="flex justify-between"><span>Hoegaarden (50 cl)</span> <span class="text-brass-gold">7,50 EUR</span></div>
+                            </div>
+                        </section>
+                        <section>
+                            <h4 class="font-display text-2xl mb-8 border-b border-brass-gold/20 pb-4">Les cocktails</h4>
+                            <div class="space-y-4 text-sm">
+                                <div class="item-row"><div class="flex justify-between"><span>Aperol Spritz</span> <span class="text-brass-gold">7,90 EUR</span></div></div>
+                                <div class="item-row"><div class="flex justify-between"><span>Mojito (Clas/Pass/Framb)</span> <span class="text-brass-gold">8,50 EUR</span></div></div>
+                                <div class="item-row"><div class="flex justify-between"><span>Moscow Mule</span> <span class="text-brass-gold">8,50 EUR</span></div></div>
+                                <div class="item-row"><div class="flex justify-between"><span>Piña Colada</span> <span class="text-brass-gold">8,50 EUR</span></div></div>
+                                <div class="item-row"><div class="flex justify-between"><span>Marilyn Kiss</span> <span class="text-brass-gold">8,50 EUR</span></div></div>
+                                <div class="item-row"><div class="flex justify-between"><span>Pornstar Martini</span> <span class="text-brass-gold">8,50 EUR</span></div></div>
+                                <div class="item-row"><div class="flex justify-between"><span>Espresso Martini</span> <span class="text-brass-gold">8,50 EUR</span></div></div>
+                            </div>
+                        </section>
+                        <section>
+                            <h4 class="font-display text-2xl mb-8 border-b border-brass-gold/20 pb-4">Les Mocktails</h4>
+                            <div class="space-y-4 text-sm">
+                                <div class="flex justify-between"><span>Virgin Mojito</span> <span class="text-brass-gold">7,50 EUR</span></div>
+                                <div class="flex justify-between"><span>Virgin Mule</span> <span class="text-brass-gold">7,50 EUR</span></div>
+                                <div class="flex justify-between"><span>Virgin Pina Colada</span> <span class="text-brass-gold">7,50 EUR</span></div>
+                                <div class="flex justify-between"><span>Virgin Pornstar</span> <span class="text-brass-gold">7,50 EUR</span></div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="space-y-12">
+                        <section>
+                            <h4 class="font-display text-2xl mb-8 border-b border-brass-gold/20 pb-4">Bières Pression</h4>
+                            <div class="space-y-3 text-sm">
+                                <div class="flex justify-between"><span>Stella Artois</span> <span>4,00 / 7,00 EUR</span></div>
+                                <div class="flex justify-between"><span>Leffe</span> <span>4,50 / 8,00 EUR</span></div>
+                                <div class="flex justify-between"><span>Hoegaarden Blanche</span> <span>4,80 / 8,50 EUR</span></div>
+                                <div class="flex justify-between"><span>Goose IPA</span> <span>4,80 / 8,50 EUR</span></div>
+                                <div class="flex justify-between"><span>Tripel Karmeliet</span> <span>4,50 / 8,00 EUR</span></div>
+                                <div class="flex justify-between"><span>Panaché / Monaco / Picon</span> <span>4,00 / 7,50 EUR</span></div>
+                            </div>
+                        </section>
+                        <section>
+                            <h4 class="font-display text-2xl mb-8 border-b border-brass-gold/20 pb-4">Softs & Jus</h4>
+                            <div class="space-y-3 text-sm">
+                                <div class="flex justify-between"><span>Coca (Clas/Zero/Cherry)</span> <span class="text-brass-gold">4,00 EUR</span></div>
+                                <div class="flex justify-between"><span>Sprite / Orangina / Fanta</span> <span class="text-brass-gold">4,00 EUR</span></div>
+                                <div class="flex justify-between"><span>Schweppes / Fuze Tea</span> <span class="text-brass-gold">4,00 EUR</span></div>
+                                <div class="flex justify-between"><span>Diabolo (7 parfums)</span> <span class="text-brass-gold">4,00 EUR</span></div>
+                                <div class="flex justify-between"><span>Vittel / San Pellegrino (1L)</span> <span class="text-brass-gold">5,80 EUR</span></div>
+                                <div class="flex justify-between"><span>Jus d'orange pressé</span> <span class="text-brass-gold">4,50 EUR</span></div>
+                                <div class="flex justify-between"><span>Jus de fruits (9 parfums)</span> <span class="text-brass-gold">4,00 EUR</span></div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="space-y-12">
+                        <section>
+                            <h4 class="font-display text-2xl mb-8 border-b border-brass-gold/20 pb-4">Boissons Chaudes</h4>
+                            <div class="space-y-3 text-sm">
+                                <div class="flex justify-between"><span>Espresso / Déca</span> <span class="text-brass-gold">2,50 EUR</span></div>
+                                <div class="flex justify-between"><span>Double Café</span> <span class="text-brass-gold">4,50 EUR</span></div>
+                                <div class="flex justify-between"><span>Noisette / Allongé</span> <span class="text-brass-gold">2,60 EUR</span></div>
+                                <div class="flex justify-between"><span>Café Crème / Cappuccino</span> <span class="text-brass-gold">4,00 EUR</span></div>
+                                <div class="flex justify-between"><span>Chocolat Maison onctueux</span> <span class="text-brass-gold">4,50 EUR</span></div>
+                                <div class="flex justify-between"><span>Thés & Infusions</span> <span class="text-brass-gold">4,00 EUR</span></div>
+                                <div class="flex justify-between"><span>Matcha / Iced Matcha</span> <span class="text-brass-gold">6,90 EUR</span></div>
+                            </div>
+                        </section>
+                        <section>
+                            <h4 class="font-display text-2xl mb-8 border-b border-brass-gold/20 pb-4">Apéritifs & Digestifs</h4>
+                            <div class="space-y-3 text-sm">
+                                <div class="flex justify-between"><span>Ricard / Pastis</span> <span class="text-brass-gold">3,50 / 6,50 EUR</span></div>
+                                <div class="flex justify-between"><span>Martini / Ricard / Campari</span> <span class="text-brass-gold">5,00 EUR</span></div>
+                                <div class="flex justify-between"><span>Whiskies (J&B, Jameson, Jack)</span> <span class="text-brass-gold">8,00 - 11,00 EUR</span></div>
+                                <div class="flex justify-between"><span>Digestifs (Get, Cognac, Limon.)</span> <span class="text-brass-gold">5,50 - 10,00 EUR</span></div>
+                                <div class="flex justify-between"><span>Eaux de vie (Poire, Framb.)</span> <span class="text-brass-gold">9,00 EUR</span></div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VINS -->
+            <div id="content-vins" class="menu-content">
+                <div class="grid lg:grid-cols-2 gap-x-20 gap-y-16">
+                    <section>
+                        <h3 class="font-display italic text-3xl mb-10 border-b border-red-900/40 pb-4">Vins Rouges</h3>
+                        <div class="space-y-8">
+                            <div class="item-row">
+                                <div class="flex justify-between"><div><h5 class="font-bold">IGP Pays d’Oc “Solas Pinot Noir”</h5><p class="text-[10px] uppercase text-gray-500">Laurent Miquel</p></div><span class="text-brass-gold font-bold">22,00 EUR <span class="text-[9px] text-gray-600 font-normal">(75cl)</span></span></div>
+                                <div class="flex gap-4 mt-2 text-[10px] text-brass-gold"><span>Verre: 4,00</span> <span>25cl: 7,50</span> <span>50cl: 15,00</span></div>
+                            </div>
+                            <div class="item-row">
+                                <div class="flex justify-between"><div><h5 class="font-bold">IGP “Syrah” Domaine Melody <span class="text-green-800 text-[8px] border border-green-800 px-1 ml-1 uppercase">Bio</span></h5><p class="text-[10px] uppercase text-gray-500">Les Rhône</p></div><span class="text-brass-gold font-bold">28,00 EUR</span></div>
+                                <div class="flex gap-4 mt-2 text-[10px] text-brass-gold"><span>Verre: 6,00</span> <span>25cl: 11,00</span> <span>50cl: 18,00</span></div>
+                            </div>
+                            <div class="item-row"><div class="flex justify-between"><div><h5 class="font-bold">Crozes Hermitage “Friandise” <span class="text-green-800 text-[8px] border border-green-800 px-1 ml-1 uppercase">Bio</span></h5><p class="text-[10px] uppercase text-gray-500">Domaine Melody</p></div><span class="text-brass-gold font-bold">36,00 EUR</span></div></div>
+                            <div class="item-row"><div class="flex justify-between"><div><h5 class="font-bold">Fronsac Chateau Lamoliere</h5><p class="text-[10px] uppercase text-gray-500">Les Bordeaux</p></div><span class="text-brass-gold font-bold">34,00 EUR</span></div><div class="flex gap-4 mt-2 text-[10px] text-brass-gold"><span>Verre: 7,00</span> <span>25cl: 12,00</span> <span>50cl: 24,00</span></div></div>
+                            <div class="item-row"><div class="flex justify-between"><div><h5 class="font-bold">Haut Medoc "Moulin La Lagune" <span class="text-green-800 text-[8px] border border-green-800 px-1 ml-1 uppercase">Bio</span></h5></div><span class="text-brass-gold font-bold">42,00 EUR</span></div></div>
+                            <div class="item-row"><div class="flex justify-between"><div><h5 class="font-bold">Mercurey "Vieilles Vignes"</h5><p class="text-[10px] uppercase text-gray-500">Domaine Faiveley</p></div><span class="text-brass-gold font-bold">60,00 EUR</span></div></div>
+                            <div class="item-row"><div class="flex justify-between"><div><h5 class="font-bold italic">Chateauneuf du Pape</h5><p class="text-[10px] uppercase text-gray-500">Tardieu Laurent - Bio</p></div><span class="text-brass-gold font-bold">72,00 EUR</span></div></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h3 class="font-display italic text-3xl mb-10 border-b border-yellow-700/40 pb-4">Blancs & Bulles</h3>
+                        <div class="space-y-8">
+                            <div class="item-row">
+                                <div class="flex justify-between"><div><h5 class="font-bold">IGP Pays D’oc “Solas Chardonnay/Sauvignon”</h5><p class="text-[10px] uppercase text-gray-500">Laurent Miquel</p></div><span class="text-brass-gold font-bold">22,00 EUR</span></div>
+                                <div class="flex gap-4 mt-2 text-[10px] text-brass-gold"><span>Verre: 7,50</span> <span>50cl: 15,00</span></div>
+                            </div>
+                            <div class="item-row">
+                                <div class="flex justify-between"><div><h5 class="font-bold">Côtes du Rhône “Becs Fins” <span class="text-green-800 text-[8px] border border-green-800 px-1 ml-1 uppercase">Bio</span></h5><p class="text-[10px] uppercase text-gray-500">Tardieu Laurent</p></div><span class="text-brass-gold font-bold">29,00 EUR</span></div>
+                                <div class="flex gap-4 mt-2 text-[10px] text-brass-gold"><span>Verre: 11,00</span> <span>50cl: 19,00</span></div>
+                            </div>
+                            <div class="item-row"><div class="flex justify-between"><div><h5 class="font-bold">Pouilly Fumé “Fumettes” <span class="text-green-800 text-[8px] border border-green-800 px-1 ml-1 uppercase">Bio</span></h5><p class="text-[10px] uppercase text-gray-500">Les Loire</p></div><span class="text-brass-gold font-bold">43,00 EUR</span></div></div>
+                            <div class="item-row"><div class="flex justify-between"><div><h5 class="font-bold">Chablis Domaine Billaud Simon</h5><p class="text-[10px] uppercase text-gray-500">Bourgogne</p></div><span class="text-brass-gold font-bold">48,00 EUR</span></div></div>
+                            <div class="item-row"><div class="flex justify-between"><div><h5 class="font-bold">Prosecco Extra Dry Fratelli Cosmo</h5></div><span class="text-brass-gold font-bold">28,00 EUR <span class="text-[9px] font-normal ml-2">Verre: 6,00</span></span></div></div>
+                            <div class="item-row pt-6 border-t border-white/5"><div class="flex justify-between"><div><h5 class="font-bold italic text-brass-gold">Champagne Charles Heidsieck Brut</h5></div><span class="text-brass-gold font-bold">65,00 EUR</span></div><div class="flex gap-4 mt-2 text-[10px] text-brass-gold"><span>Verre: 9,00</span> <span>Blanc de Blancs: 99,00</span></div></div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </section>
+
+        <!-- GALERIE -->
+        <section id="galerie" class="py-32 bg-black/40 backdrop-blur-sm">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="flex flex-col items-center mb-20 text-center reveal">
+                    <h2 class="text-5xl font-display italic mb-4">L'Esprit du Lieu</h2>
+                    <p class="text-brass-gold/60 uppercase tracking-[0.3em] text-[10px]">Instantanés de la Brasserie</p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="overflow-hidden rounded-3xl aspect-[3/4] reveal"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=800" class="w-full h-full object-cover grayscale brightness-75"></div>
+                    <div class="overflow-hidden rounded-3xl aspect-square md:col-span-2 md:row-span-2 reveal"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1200" class="w-full h-full object-cover"></div>
+                    <div class="overflow-hidden rounded-3xl aspect-square reveal"><img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=800" class="w-full h-full object-cover"></div>
+                    <div class="overflow-hidden rounded-3xl aspect-square reveal"><img src="https://images.unsplash.com/photo-1550966841-3ee5ad60d0d9?q=80&w=800" class="w-full h-full object-cover"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT & HORAIRES -->
+        <section id="contact" class="py-32 px-6 relative">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-col lg:flex-row gap-20">
+                    <div class="lg:w-1/2 reveal">
+                        <h2 class="text-6xl font-display italic mb-12">Nous <span class="text-brass-gold">Trouver.</span></h2>
+                        <div class="space-y-10">
+                            <div class="flex items-start gap-6">
+                                <div class="w-12 h-12 rounded-xl bg-brass-green flex items-center justify-center border border-brass-gold/20 flex-shrink-0"><i data-lucide="map-pin" class="w-5 h-5 text-brass-gold"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-sm uppercase text-brass-gold tracking-widest mb-2">Localisation</h4>
+                                    <p class="text-brass-cream text-lg mb-6">142 Avenue du Général Leclerc, 75014 Paris</p>
+                                    
+                                    <h4 class="font-bold text-[10px] uppercase text-brass-gold tracking-[0.3em] mb-3">Horaires d'ouverture</h4>
+                                    <div class="space-y-1 text-sm text-gray-400">
+                                        <div class="flex justify-between w-64 border-b border-white/5 pb-1"><span>Lundi - Vendredi</span> <span class="text-brass-cream">07h00 - 00h00</span></div>
+                                        <div class="flex justify-between w-64 border-b border-white/5 pb-1"><span>Samedi</span> <span class="text-brass-cream">08h00 - 01h00</span></div>
+                                        <div class="flex justify-between w-64 pb-1"><span>Dimanche</span> <span class="text-brass-cream">08h00 - 23h00</span></div>
+                                    </div>
+                                    <p class="text-[10px] text-brass-gold/60 mt-4 italic uppercase tracking-wider">* Service continu à partir de 12h00</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-6 pt-4 border-t border-white/5">
+                                <div class="w-12 h-12 rounded-xl bg-brass-green flex items-center justify-center border border-brass-gold/20 flex-shrink-0"><i data-lucide="phone" class="w-5 h-5 text-brass-gold"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-sm uppercase text-brass-gold tracking-widest mb-1">Téléphone</h4>
+                                    <p class="text-brass-cream text-lg">01 45 39 43 00</p>
+                                    <p class="text-[10px] text-gray-500 mt-1 uppercase">Ligne directe réservations</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lg:w-1/2 w-full h-[550px] bg-[#111] rounded-[3rem] overflow-hidden reveal shadow-2xl">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2626.82!2d2.3243!3d48.8234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDjCsDQ5JzIyLjQiTiAywrAxOSc0OC4wIkU!5e0!3m2!1sfr!2sfr!4v1620000000000" class="w-full h-full border-0 grayscale invert brightness-90 opacity-80 hover:opacity-100 transition-opacity duration-700"></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RÉSERVATION -->
+        <section id="reservation" class="py-32 px-6 bg-black/20">
+            <div class="max-w-4xl mx-auto text-center reveal">
+                <h2 class="text-5xl font-display italic mb-10 text-brass-cream">Réserver votre <span class="text-brass-gold">Instant.</span></h2>
+                <div class="bg-dark-base border border-white/5 p-8 md:p-12 rounded-[2.5rem] shadow-2xl">
+                    <form class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left" onsubmit="event.preventDefault();">
+                        <div class="space-y-2"><label class="text-[10px] uppercase tracking-widest text-brass-gold px-2">Nom complet</label><input type="text" placeholder="Ex: Jean Dupont" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-brass-gold outline-none text-sm placeholder:text-gray-700"></div>
+                        <div class="space-y-2"><label class="text-[10px] uppercase tracking-widest text-brass-gold px-2">Téléphone</label><input type="tel" placeholder="06 00 00 00 00" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-brass-gold outline-none text-sm placeholder:text-gray-700"></div>
+                        <div class="space-y-2"><label class="text-[10px] uppercase tracking-widest text-brass-gold px-2">Date</label><input type="date" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-brass-gold outline-none text-sm"></div>
+                        <div class="space-y-2"><label class="text-[10px] uppercase tracking-widest text-brass-gold px-2">Personnes</label><select class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-brass-gold outline-none text-sm appearance-none"><option>1 Personne</option><option selected>2 Personnes</option><option>3 Personnes</option><option>4 Personnes</option><option>5 Personnes</option><option>6+ Personnes</option></select></div>
+                        <button class="md:col-span-2 w-full py-4 mt-4 bg-brass-gold text-white font-bold uppercase text-xs tracking-[0.2em] rounded-xl hover:bg-[#c4a66d] transition-colors active:scale-95">Confirmer la demande</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#050505] pt-24 pb-12 px-6 border-t border-white/5">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20 reveal">
+                <div class="space-y-8">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 overflow-hidden rounded-lg border border-brass-gold/20"><img src="image_9cee20.jpg" class="w-full h-full object-cover"></div>
+                        <div class="flex flex-col leading-none">
+                            <span class="font-display font-bold text-lg text-brass-cream uppercase tracking-tighter">4 ROUTES</span>
+                            <span class="text-[8px] text-brass-gold uppercase tracking-[0.4em]">Paris XIV</span>
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-gray-500 leading-relaxed uppercase tracking-wider">
+                        Une institution du 14ème arrondissement, où l'élégance de la brasserie parisienne rencontre le confort d'une cuisine faite maison. Depuis plus de 30 ans à votre service.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:border-brass-gold hover:text-brass-gold transition-all"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:border-brass-gold hover:text-brass-gold transition-all"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:border-brass-gold hover:text-brass-gold transition-all"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                    </div>
+                </div>
+
+                <div class="space-y-8">
+                    <h4 class="text-[10px] font-bold uppercase tracking-[0.4em] text-brass-gold">Navigation</h4>
+                    <ul class="flex flex-col gap-4 text-[10px] uppercase tracking-[0.2em] font-medium text-gray-400">
+                        <li><a href="javascript:scrollToSection('accueil')" class="hover:text-brass-gold transition-colors flex items-center gap-2"><i data-lucide="chevron-right" class="w-3 h-3"></i> Accueil</a></li>
+                        <li><a href="javascript:scrollToSection('menu')" class="hover:text-brass-gold transition-colors flex items-center gap-2"><i data-lucide="chevron-right" class="w-3 h-3"></i> La Carte</a></li>
+                        <li><a href="javascript:scrollToSection('galerie')" class="hover:text-brass-gold transition-colors flex items-center gap-2"><i data-lucide="chevron-right" class="w-3 h-3"></i> Galerie</a></li>
+                        <li><a href="javascript:scrollToSection('contact')" class="hover:text-brass-gold transition-colors flex items-center gap-2"><i data-lucide="chevron-right" class="w-3 h-3"></i> Contact</a></li>
+                        <li><a href="javascript:scrollToSection('reservation')" class="text-brass-gold flex items-center gap-2"><i data-lucide="chevron-right" class="w-3 h-3"></i> Réserver</a></li>
+                    </ul>
+                </div>
+
+                <div class="space-y-8">
+                    <h4 class="text-[10px] font-bold uppercase tracking-[0.4em] text-brass-gold">Informations</h4>
+                    <ul class="flex flex-col gap-4 text-[10px] uppercase tracking-[0.2em] font-medium text-gray-400">
+                        <li><a href="#" class="hover:text-brass-gold transition-colors">Mentions Légales</a></li>
+                        <li><a href="#" class="hover:text-brass-gold transition-colors">Politique de Confidentialité</a></li>
+                        <li><a href="#" class="hover:text-brass-gold transition-colors">Recrutement</a></li>
+                        <li><a href="#" class="hover:text-brass-gold transition-colors">Privatisation</a></li>
+                        <li><a href="#" class="hover:text-brass-gold transition-colors">Plan du site</a></li>
+                    </ul>
+                </div>
+
+                <div class="space-y-8">
+                    <h4 class="text-[10px] font-bold uppercase tracking-[0.4em] text-brass-gold">Newsletter</h4>
+                    <p class="text-[10px] text-gray-500 uppercase tracking-widest leading-relaxed">Inscrivez-vous pour recevoir nos événements et menus saisonniers.</p>
+                    <div class="relative">
+                        <input type="email" placeholder="VOTRE EMAIL" class="w-full bg-transparent border-b border-white/20 py-2 text-[10px] outline-none focus:border-brass-gold transition-colors placeholder:text-gray-700">
+                        <button class="absolute right-0 bottom-2 text-brass-gold hover:translate-x-1 transition-transform"><i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+                    </div>
+                    <div class="pt-4">
+                        <p class="text-[10px] text-brass-gold font-bold">BRUNCH : SAM & DIM (11H - 16H)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-[9px] uppercase tracking-[0.3em] text-gray-600">
+                <div class="flex gap-6">
+                    <span>© 2024 Brasserie des 4 Routes</span>
+                    <span class="hidden md:block">Tous droits réservés</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span>Design par</span>
+                    <span class="text-brass-gold font-bold italic tracking-tighter text-xs">Paris Creative</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialisation des icônes
+        lucide.createIcons();
+
+        // Gestion de l'affichage progressif (reveal)
+        function refreshReveals() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 50) el.classList.add('active');
+            });
+        }
+
+        // Navigation avec loader fluide et scroll précis
+        function scrollToSection(targetId) {
+            const loader = document.getElementById('page-loader');
+            const target = document.getElementById(targetId);
+            if (!target) return;
+            if (isMenuOpen) toggleMenu();
+
+            // Effet de transition visuelle
+            loader.style.pointerEvents = 'auto';
+            loader.style.transform = 'translateY(0)';
+            
+            setTimeout(() => {
+                const headerOffset = 80;
+                const elementPosition = target.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'auto'
+                });
+
+                loader.style.transform = 'translateY(-100%)';
+                
+                setTimeout(() => {
+                    loader.style.transition = 'none';
+                    loader.style.transform = 'translateY(100%)';
+                    setTimeout(() => {
+                        loader.style.transition = 'transform 0.6s cubic-bezier(0.85, 0, 0.15, 1)';
+                        refreshReveals();
+                    }, 50);
+                }, 600);
+            }, 600);
+        }
+
+        // Observer pour la surbrillance automatique des liens
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '-20% 0px -70% 0px', // Active la section quand elle est dans la zone haute/centrale
+            threshold: 0
+        };
+
+        const observerCallback = (entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('data-section') === id) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(observerCallback, observerOptions);
+        sections.forEach(section => observer.observe(section));
+
+        // Switcher d'onglets pour le menu
+        function switchMenu(menuId) {
+            document.querySelectorAll('.menu-tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.menu-content').forEach(content => content.classList.remove('active'));
+            document.getElementById('btn-' + menuId).classList.add('active');
+            document.getElementById('content-' + menuId).classList.add('active');
+            refreshReveals();
+        }
+
+        // Menu Mobile logic
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileOverlay = document.getElementById('mobile-overlay');
+        const bar1 = document.getElementById('bar1');
+        const bar2 = document.getElementById('bar2');
+        let isMenuOpen = false;
+
+        function toggleMenu(id) {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileOverlay.classList.add('open');
+                bar1.style.transform = 'rotate(45deg) translate(5px, 5px)';
+                bar2.style.transform = 'rotate(-45deg) translate(5px, -5px)';
+                document.body.style.overflow = 'hidden';
+            } else {
+                mobileOverlay.classList.remove('open');
+                bar1.style.transform = 'none';
+                bar2.style.transform = 'none';
+                document.body.style.overflow = 'auto';
+                if(id) scrollToSection(id);
+            }
+        }
+
+        menuToggle.addEventListener('click', () => toggleMenu());
+        window.addEventListener('load', refreshReveals);
+        window.addEventListener('scroll', refreshReveals);
+    </script>
+</body>
+</html>
